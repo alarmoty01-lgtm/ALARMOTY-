@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الأرموطي - ALARMOTY</title>
+    <style>
+        :root {
+            --primary-color: #0b2545;
+            --secondary-color: #134074;
+            --accent-color: #8da9c4;
+            --bg-color: #eeef9;
+            --text-color: #1d3557;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 3rem;
+            letter-spacing: 2px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .filter-section {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--secondary-color);
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s, transform 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-color);
+        }
+
+        .btn-whatsapp {
+            background-color: #25d366;
+            color: var(--white);
+        }
+
+        .btn-whatsapp:hover {
+            background-color: #1ebd5d;
+        }
+
+        .btn-call {
+            background-color: #3498db;
+            color: var(--white);
+        }
+
+        .btn-call:hover {
+            background-color: #2980b9;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            border-right: 5px solid var(--secondary-color);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 10px;
+        }
+
+        .info-group {
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: var(--secondary-color);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: 5% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>الأرموطي</h1>
+    <p>ALARMOTY</p>
+</header>
+
+<div class="container">
+    <div class="filter-section">
+        <input type="text" id="searchInput" placeholder="ابحث بالاسم أو العنوان...">
+        <button class="btn btn-primary" onclick="openModal()">إضافة فرع جديد</button>
+    </div>
+
+    <div id="branchesContainer">
+        <!-- Branches will be injected here -->
+    </div>
+</div>
+
+<!-- Modal for adding new branch -->
+<div id="branchModal" class="modal">
+    <div class="modal-content">
+        <h2>إضافة فرع جديد</h2>
+        <form id="branchForm">
+            <div class="form-group">
+                <label for="branchName">اسم الفرع/النشاط:</label>
+                <input type="text" id="branchName" required>
+            </div>
+            <div class="form-group">
+                <label for="branchAddress">العنوان:</label>
+                <input type="text" id="branchAddress" required>
+            </div>
+            <div class="form-group">
+                <label for="primaryPhone">الرقم الأساسي (للاتصال والواتساب):</label>
+                <input type="tel" id="primaryPhone" placeholder="مثال: 01012345678" required>
+            </div>
+            <div class="form-group">
+                <label for="secondaryPhone">الرقم الإضافي (للاتصال فقط):</label>
+                <input type="tel" id="secondaryPhone" placeholder="مثال: 01112345678">
+            </div>
+            <button type="submit" class="btn btn-primary">حفظ الفرع</button>
+            <button type="button" class="btn" onclick="closeModal()">إلغاء</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    let branches = JSON.parse(localStorage.getItem('alarmoty_branches')) || [
+        {
+            name: "الفرع الرئيسي",
+            address: "القاهرة - وسط البلد",
+            primaryPhone: "01000000001",
+            secondaryPhone: "01200000002"
+        }
+    ];
+
+    function saveBranches() {
+        localStorage.setItem('alarmoty_branches', JSON.stringify(branches));
+    }
+
+    function renderBranches() {
+        const container = document.getElementById('branchesContainer');
+        container.innerHTML = '';
+        
+        branches.forEach((branch, index) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            
+            const cleanPrimary = branch.primaryPhone.replace(/\D/g, '');
+            const cleanSecondary = branch.secondaryPhone ? branch.secondaryPhone.replace(/\D/g, '') : '';
+            
+            let whatsappNumber = cleanPrimary;
+            if (whatsappNumber.startsWith('0')) {
+                whatsappNumber = '2' + whatsappNumber;
+            }
+
+            card.innerHTML = `
+                <h3>${branch.name}</h3>
+                <div class="info-group">
+                    <span class="info-label">العنوان:</span>
+                    <span>${branch.address}</span>
+                </div>
+                <div class="info-group">
+                    <span class="info-label">أرقام التواصل:</span>
+                    <div style="margin-bottom: 10px;">
+                        <strong>الرقم الأساسي:</strong> ${branch.primaryPhone}
+                        <div class="action-buttons">
+                            <a href="tel:${branch.primaryPhone}" class="btn btn-call">اتصال</a>
+                            <a href="https://wa.me/${whatsappNumber}" class="btn btn-whatsapp" target="_blank">واتساب</a>
+                        </div>
+                    </div>
+                    ${branch.secondaryPhone ? `
+                        <div>
+                            <strong>الرقم الإضافي:</strong> ${branch.secondaryPhone}
+                            <div class="action-buttons">
+                                <a href="tel:${branch.secondaryPhone}" class="btn btn-call">اتصال</a>
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    document.getElementById('branchForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const newBranch = {
+            name: document.getElementById('branchName').value,
+            address: document.getElementById('branchAddress').value,
+            primaryPhone: document.getElementById('primaryPhone').value,
+            secondaryPhone: document.getElementById('secondaryPhone').value
+        };
+        branches.push(newBranch);
+        saveBranches();
+        renderBranches();
+        closeModal();
+        this.reset();
+    });
+
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            const text = card.innerText.toLowerCase();
+            card.style.display = text.includes(searchTerm) ? '' : 'none';
+        });
+    });
+
+    function openModal() {
+        document.getElementById('branchModal').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('branchModal').style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('branchModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+
+    renderBranches();
+</script>
+
+</body>
+</html>
